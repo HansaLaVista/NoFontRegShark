@@ -243,8 +243,8 @@ class Maze:
     # reflect the first 14 columns to print the map
     def __init__(self):
         self.next_tile = (-1, -1)
-        self.array_2d = [[]]
-        self.current_tile = (0,0)
+        self.final_2d_list = [[]]
+        self.current_tile = (0, 0)
 
     def generate_matrix(self):
 
@@ -289,33 +289,30 @@ class Maze:
         while tileMap.add_wall_obstacle(extend=True):
             pass
 
-        self.aray2d = [[]]
+        self.angled_2d_list = [[]]
 
 
         counterForSomeReason = 0
         for line in str(tileMap).splitlines():
-                aray = []
-                s = line[:15]
-                #print(s + s[::-1])
-                q = s + s[::-1]
-                #print(range(len(q)))
-                for e in range(len(q)):
-                    aray.append(q[e])
-                #print(aray)
-                if counterForSomeReason == 0:
-                    self.aray2d = aray
-                    counterForSomeReason += 1
-                else:
-                    self.aray2d.append(aray)
+            row_list = []
+            s = line[:15]
+            q = s + s[::-1]
+            for e in range(len(q)):
+                row_list.append(q[e])
+                # if counterForSomeReason == 0:
+                #     self.angled_2d_list = row_list
+                #     counterForSomeReason += 1
+                # else:
+                self.angled_2d_list.append(row_list)
 
-        self.array_2d = [['.' for x in range(len(self.aray2d))] for i in range(len(self.aray2d[0]))]
-        for a in range(len(self.aray2d)):
-            for b in range(len(self.aray2d[0])):
-                self.array_2d[b][a] = self.aray2d[a][b]
+        self.final_2d_list = [['.' for x in range(len(self.angled_2d_list))] for i in range(len(self.angled_2d_list[0]))]
+        for a in range(len(self.angled_2d_list)):
+            for b in range(len(self.angled_2d_list[0])):
+                self.final_2d_list[b][a] = self.angled_2d_list[a][b]
         #print(self.aray2d)
         #print(aray2d[1][1])
         #print(self.array_2d)
-        return self.array_2d
+        return self.final_2d_list
 
 
     def manhat_distance(self, tile, target_tile):
@@ -327,7 +324,7 @@ class Maze:
         neighbours = []
         directions = [[1,0],[-1,0],[0,1],[0,-1]]
         for a in range(len(directions)):
-            if self.array_2d[tile[0]+directions[a][0]][tile[1]+directions[a][1]] != '|':
+            if self.final_2d_list[tile[0]+directions[a][0]][tile[1]+directions[a][1]] != '|':
                 neighbours.append((tile[0]+directions[a][0], tile[1]+directions[a][1]))
         return neighbours
 
@@ -347,7 +344,7 @@ class Maze:
 
             return False
         else:
-            if self.array_2d[self.next_tile[0]][self.next_tile[1]] == '|':
+            if self.final_2d_list[self.next_tile[0]][self.next_tile[1]] == '|':
                 return True
             else:
                 return False
@@ -365,12 +362,12 @@ class Maze:
             print("k")
             return False
         if (self.pos[0] % self.tile_size)**2 > 2 and (self.pos[1] % self.tile_size)**2 > 2 and \
-                self.array_2d[self.next_tile[0]][self.next_tile[1]] == '|':
+                self.final_2d_list[self.next_tile[0]][self.next_tile[1]] == '|':
             print("t")
             return True
         else:
 
-            if self.array_2d[self.next_tile[0]][self.next_tile[1]] == '.':# and (self.pos[0] % (self.tile_size)**2 < 2) \
+            if self.final_2d_list[self.next_tile[0]][self.next_tile[1]] == '.':# and (self.pos[0] % (self.tile_size)**2 < 2) \
                      #and ((self.pos[1] % self.tile_size)**2 < 2): #and self.direction != [0, 0]:
                  return False
             else:
